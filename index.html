@@ -1,148 +1,264 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Sprawdzian z podstaw ekonomii</title>
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f7f9;
-    color: #333;
-    padding: 30px;
-  }
-  h1 {
-    text-align: center;
-    color: #004d99;
-  }
-  .question {
-    background: white;
-    padding: 15px;
-    margin-bottom: 15px;
-    border-radius: 10px;
-    box-shadow: 0 0 5px rgba(0,0,0,0.1);
-  }
-  .result {
-    font-weight: bold;
-    margin-top: 20px;
-    padding: 10px;
-    border-radius: 8px;
-  }
-  .correct {
-    color: green;
-  }
-  .incorrect {
-    color: red;
-  }
-  button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 8px;
-    cursor: pointer;
-  }
-  button:hover {
-    background-color: #0056b3;
-  }
+  body{font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;color:#222;padding:24px}
+  h1{text-align:center;color:#0b3b66}
+  .question{background:#fff;border-radius:10px;padding:14px;margin:12px 0;box-shadow:0 1px 4px rgba(0,0,0,0.06)}
+  label{display:block;margin:6px 0;cursor:pointer}
+  .choice{padding:4px;border-radius:6px}
+  .choice.correct{background:#e6f7ea;color:#086c2f;font-weight:600}
+  .choice.incorrect{background:#fdecea;color:#9a2218;font-weight:600}
+  .explain{font-size:13px;margin-top:6px}
+  button{display:block;margin:18px auto;padding:10px 18px;background:#007bff;color:white;border:none;border-radius:8px;cursor:pointer}
+  #result{margin-top:14px;text-align:center;font-size:18px;font-weight:700}
+  .small{font-size:13px;color:#555;margin-top:6px}
 </style>
 </head>
 <body>
 
 <h1>🧠 Sprawdzian z podstaw ekonomii</h1>
+<p class="small">Wybierz odpowiedzi i kliknij <strong>Sprawdź wynik</strong>. Zostaną podświetlone poprawne i błędne odpowiedzi.</p>
 
-<form id="quizForm">
+<form id="quiz">
 
-<div class="question">
-1. Ekonomia to nauka, która bada:<br>
-<label><input type="radio" name="q1" value="A"> A. wyłącznie gospodarkę krajową</label><br>
-<label><input type="radio" name="q1" value="B"> B. zachowania polityków gospodarczych</label><br>
-<label><input type="radio" name="q1" value="C"> C. sposoby gospodarowania ograniczonymi zasobami</label>
+<!-- q1 -->
+<div class="question" data-q="q1">
+  <p><strong>1.</strong> Ekonomia to nauka, która bada:</p>
+  <label><span class="choice"><input type="radio" name="q1" value="A"> A. wyłącznie gospodarkę krajową</span></label>
+  <label><span class="choice"><input type="radio" name="q1" value="B"> B. zachowania polityków gospodarczych</span></label>
+  <label><span class="choice"><input type="radio" name="q1" value="C"> C. sposoby gospodarowania ograniczonymi zasobami</span></label>
 </div>
 
-<div class="question">
-2. Do zasobów używanych do produkcji dóbr i usług zaliczamy:<br>
-<label><input type="radio" name="q2" value="A"> A. tylko kapitał i pracę</label><br>
-<label><input type="radio" name="q2" value="B"> B. zasoby naturalne (ziemia), ludzkie (praca) i kapitałowe (maszyny)</label><br>
-<label><input type="radio" name="q2" value="C"> C. wyłącznie dobra luksusowe</label>
+<!-- q2 -->
+<div class="question" data-q="q2">
+  <p><strong>2.</strong> Do zasobów używanych do produkcji dóbr i usług zaliczamy:</p>
+  <label><span class="choice"><input type="radio" name="q2" value="A"> A. tylko kapitał i pracę</span></label>
+  <label><span class="choice"><input type="radio" name="q2" value="B"> B. zasoby naturalne (ziemia), ludzkie (praca) i kapitałowe (maszyny)</span></label>
+  <label><span class="choice"><input type="radio" name="q2" value="C"> C. wyłącznie dobra luksusowe</span></label>
 </div>
 
-<div class="question">
-3. Równowaga rynkowa to stan, w którym:<br>
-<label><input type="radio" name="q3" value="A"> A. Popyt jest większy niż podaż (niedobór)</label><br>
-<label><input type="radio" name="q3" value="B"> B. Wielkość popytu równa się wielkości podaży</label><br>
-<label><input type="radio" name="q3" value="C"> C. Producenci oferują więcej dóbr niż konsumenci chcą kupić (nadwyżka)</label>
+<!-- q3 -->
+<div class="question" data-q="q3">
+  <p><strong>3.</strong> Równowaga rynkowa to stan, w którym:</p>
+  <label><span class="choice"><input type="radio" name="q3" value="A"> A. Popyt jest większy niż podaż (niedobór)</span></label>
+  <label><span class="choice"><input type="radio" name="q3" value="B"> B. Wielkość popytu równa się wielkości podaży</span></label>
+  <label><span class="choice"><input type="radio" name="q3" value="C"> C. Producenci oferują więcej dóbr niż konsumenci chcą kupić (nadwyżka)</span></label>
 </div>
 
-<!-- Dodaj kolejne pytania analogicznie -->
-<!-- Dla skrótu pokazuję tylko 3, ale możesz wkleić wszystkie 20 w tym samym formacie -->
+<!-- q4 -->
+<div class="question" data-q="q4">
+  <p><strong>4.</strong> Model gospodarki rynkowej, który zakłada dużą rolę państwa w redystrybucji dochodów (np. Szwecja), to:</p>
+  <label><span class="choice"><input type="radio" name="q4" value="A"> A. Model liberalny</span></label>
+  <label><span class="choice"><input type="radio" name="q4" value="B"> B. Model socjalny</span></label>
+  <label><span class="choice"><input type="radio" name="q4" value="C"> C. Model mieszany</span></label>
+</div>
 
-<button type="button" onclick="checkAnswers()">Sprawdź wynik</button>
+<!-- q5 -->
+<div class="question" data-q="q5">
+  <p><strong>5.</strong> Rachunek ekonomiczny to metoda, która polega na:</p>
+  <label><span class="choice"><input type="radio" name="q5" value="A"> A. Podejmowaniu decyzji na zasadzie "co, jak i dla kogo produkować"</span></label>
+  <label><span class="choice"><input type="radio" name="q5" value="B"> B. Porównywaniu kosztów i korzyści różnych decyzji gospodarczych</span></label>
+  <label><span class="choice"><input type="radio" name="q5" value="C"> C. Wyłącznie maksymalizacji efektów przy danych zasobach</span></label>
+</div>
+
+<!-- q6 -->
+<div class="question" data-q="q6">
+  <p><strong>6.</strong> Popyt jest nieelastyczny (|EpD|&lt;1) i dotyczy głównie:</p>
+  <label><span class="choice"><input type="radio" name="q6" value="A"> A. Dóbr luksusowych</span></label>
+  <label><span class="choice"><input type="radio" name="q6" value="B"> B. Artykułów podstawowych</span></label>
+  <label><span class="choice"><input type="radio" name="q6" value="C"> C. Dóbr, dla których łatwo znaleźć substytuty</span></label>
+</div>
+
+<!-- q7 -->
+<div class="question" data-q="q7">
+  <p><strong>7.</strong> Zasada rzadkości oznacza, że:</p>
+  <label><span class="choice"><input type="radio" name="q7" value="A"> A. potrzeby ludzi są ograniczone</span></label>
+  <label><span class="choice"><input type="radio" name="q7" value="B"> B. ceny są zawsze wysokie</span></label>
+  <label><span class="choice"><input type="radio" name="q7" value="C"> C. zasoby są ograniczone, a potrzeby nieograniczone</span></label>
+</div>
+
+<!-- q8 -->
+<div class="question" data-q="q8">
+  <p><strong>8.</strong> Elastyczność cenowa podaży zależy m.in. od:</p>
+  <label><span class="choice"><input type="radio" name="q8" value="A"> A. udziału dobra w budżecie</span></label>
+  <label><span class="choice"><input type="radio" name="q8" value="B"> B. dostępności surowców i możliwości magazynowania</span></label>
+  <label><span class="choice"><input type="radio" name="q8" value="C"> C. gustów konsumentów</span></label>
+</div>
+
+<!-- q9 -->
+<div class="question" data-q="q9">
+  <p><strong>9.</strong> Ekonomia to nauka, która bada:</p>
+  <label><span class="choice"><input type="radio" name="q9" value="A"> A. zachowania polityków gospodarczych</span></label>
+  <label><span class="choice"><input type="radio" name="q9" value="B"> B. sposoby gospodarowania ograniczonymi zasobami</span></label>
+  <label><span class="choice"><input type="radio" name="q9" value="C"> C. wyłącznie gospodarkę krajową</span></label>
+</div>
+
+<!-- q10 -->
+<div class="question" data-q="q10">
+  <p><strong>10.</strong> Krzywa możliwości produkcyjnych pokazuje:</p>
+  <label><span class="choice"><input type="radio" name="q10" value="A"> A. zależność między ceną a popytem</span></label>
+  <label><span class="choice"><input type="radio" name="q10" value="B"> B. efektywność wykorzystania zasobów</span></label>
+  <label><span class="choice"><input type="radio" name="q10" value="C"> C. strukturę zatrudnienia</span></label>
+</div>
+
+<!-- q11 -->
+<div class="question" data-q="q11">
+  <p><strong>11.</strong> Do zasobów zaliczamy:</p>
+  <label><span class="choice"><input type="radio" name="q11" value="A"> A. tylko kapitał i pracę</span></label>
+  <label><span class="choice"><input type="radio" name="q11" value="B"> B. ziemię, pracę i kapitał</span></label>
+  <label><span class="choice"><input type="radio" name="q11" value="C"> C. wyłącznie dobra luksusowe</span></label>
+</div>
+
+<!-- q12 -->
+<div class="question" data-q="q12">
+  <p><strong>12.</strong> Koszt utraconych możliwości (alternatywny) to:</p>
+  <label><span class="choice"><input type="radio" name="q12" value="A"> A. suma wszystkich zaniechanych wyborów</span></label>
+  <label><span class="choice"><input type="radio" name="q12" value="B"> B. koszt pieniężny podjętej decyzji</span></label>
+  <label><span class="choice"><input type="radio" name="q12" value="C"> C. wartość najlepszego zaniechanego wyboru</span></label>
+</div>
+
+<!-- q13 -->
+<div class="question" data-q="q13">
+  <p><strong>13.</strong> Jeżeli cenowa elastyczność popytu jest wysoka (elastyczny), oznacza to, że:</p>
+  <label><span class="choice"><input type="radio" name="q13" value="A"> A. popyt nie reaguje na zmianę ceny</span></label>
+  <label><span class="choice"><input type="radio" name="q13" value="B"> B. popyt jest sztywny</span></label>
+  <label><span class="choice"><input type="radio" name="q13" value="C"> C. względna zmiana popytu jest większa od względnej zmiany ceny</span></label>
+</div>
+
+<!-- q14 -->
+<div class="question" data-q="q14">
+  <p><strong>14.</strong> Mikroekonomia analizuje m.in.:</p>
+  <label><span class="choice"><input type="radio" name="q14" value="A"> A. zachowanie pojedynczych podmiotów (konsumentów, firm)</span></label>
+  <label><span class="choice"><input type="radio" name="q14" value="B"> B. bada wpływ polityki fiskalnej i monetarnej</span></label>
+  <label><span class="choice"><input type="radio" name="q14" value="C"> C. bada globalnie PKB i inflację</span></label>
+</div>
+
+<!-- q15 -->
+<div class="question" data-q="q15">
+  <p><strong>15.</strong> Dobra komplementarne to dobra, które:</p>
+  <label><span class="choice"><input type="radio" name="q15" value="A"> A. mają zerową elastyczność mieszaną</span></label>
+  <label><span class="choice"><input type="radio" name="q15" value="B"> B. uzupełniają się w zaspokajaniu potrzeb (np. samochody i paliwo)</span></label>
+  <label><span class="choice"><input type="radio" name="q15" value="C"> C. wzajemnie się wykluczają (substytuty)</span></label>
+</div>
+
+<!-- q16 -->
+<div class="question" data-q="q16">
+  <p><strong>16.</strong> Zgodnie z prawem podaży, wraz ze wzrostem ceny, podaż:</p>
+  <label><span class="choice"><input type="radio" name="q16" value="A"> A. rośnie</span></label>
+  <label><span class="choice"><input type="radio" name="q16" value="B"> B. maleje</span></label>
+  <label><span class="choice"><input type="radio" name="q16" value="C"> C. pozostaje bez zmian</span></label>
+</div>
+
+<!-- q17 -->
+<div class="question" data-q="q17">
+  <p><strong>17.</strong> Niedobór podaży na rynku (popyt &gt; podaż) prowadzi do:</p>
+  <label><span class="choice"><input type="radio" name="q17" value="A"> A. Stabilizacji ceny na obecnym poziomie</span></label>
+  <label><span class="choice"><input type="radio" name="q17" value="B"> B. Wzrostu cen, zachęcając producentów do zwiększenia podaży</span></label>
+  <label><span class="choice"><input type="radio" name="q17" value="C"> C. Spadku cen, aż do osiągnięcia równowagi</span></label>
+</div>
+
+<!-- q18 -->
+<div class="question" data-q="q18">
+  <p><strong>18.</strong> Dobra wolne to:</p>
+  <label><span class="choice"><input type="radio" name="q18" value="A"> A. produkty wymagające pracy ludzkiej (dobra ekonomiczne)</span></label>
+  <label><span class="choice"><input type="radio" name="q18" value="B"> B. dobra o wysokiej wartości rynkowej</span></label>
+  <label><span class="choice"><input type="radio" name="q18" value="C"> C. rzeczy dostępne bez nakładu pracy i kosztów</span></label>
+</div>
+
+<!-- q19 -->
+<div class="question" data-q="q19">
+  <p><strong>19.</strong> Mikroekonomia zajmuje się:</p>
+  <label><span class="choice"><input type="radio" name="q19" value="A"> A. zachowaniem pojedynczych podmiotów gospodarczych (np. gospodarstw domowych)</span></label>
+  <label><span class="choice"><input type="radio" name="q19" value="B"> B. badaniem budżetu państwa</span></label>
+  <label><span class="choice"><input type="radio" name="q19" value="C"> C. analizą całej gospodarki</span></label>
+</div>
+
+<!-- q20 -->
+<div class="question" data-q="q20">
+  <p><strong>20.</strong> Dobra Giffena to:</p>
+  <label><span class="choice"><input type="radio" name="q20" value="A"> A. dobra bardzo podstawowe, których popyt rośnie wraz ze wzrostem ceny</span></label>
+  <label><span class="choice"><input type="radio" name="q20" value="B"> B. dobra substytucyjne</span></label>
+  <label><span class="choice"><input type="radio" name="q20" value="C"> C. dobra luksusowe</span></label>
+</div>
+
+<button type="button" id="checkBtn">Sprawdź wynik</button>
 </form>
 
-<div id="result" class="result"></div>
+<div id="result" aria-live="polite"></div>
 
 <script>
-function checkAnswers() {
+(function(){
   const correct = {
-    q1: "C",
-    q2: "B",
-    q3: "B",
-    q4: "B",
-    q5: "B",
-    q6: "B",
-    q7: "C",
-    q8: "B",
-    q9: "B",
-    q10: "B",
-    q11: "B",
-    q12: "C",
-    q13: "C",
-    q14: "A",
-    q15: "B",
-    q16: "A",
-    q17: "B",
-    q18: "C",
-    q19: "A",
-    q20: "A"
+    q1:"C", q2:"B", q3:"B", q4:"B", q5:"B",
+    q6:"B", q7:"C", q8:"B", q9:"B", q10:"B",
+    q11:"B", q12:"C", q13:"C", q14:"A", q15:"B",
+    q16:"A", q17:"B", q18:"C", q19:"A", q20:"A"
   };
 
-  let score = 0;
-  const questions = document.querySelectorAll('.question');
+  function clearStyles(qElem){
+    const labels = qElem.querySelectorAll('label > .choice');
+    labels.forEach(l => {
+      l.classList.remove('correct','incorrect');
+    });
+  }
 
-  questions.forEach((q, index) => {
-    const qName = 'q' + (index + 1);
-    const selected = document.querySelector(`input[name="${qName}"]:checked`);
-    const correctAnswer = correct[qName];
-
-    // usuń stare oznaczenia
-    q.querySelectorAll('label').forEach(l => l.style.fontWeight = 'normal');
-
-    if (selected) {
-      if (selected.value === correctAnswer) {
-        score++;
-        selected.parentElement.style.color = 'green';
-      } else {
-        selected.parentElement.style.color = 'red';
-        // pokaż, która odpowiedź była prawidłowa
-        const correctLabel = q.querySelector(`input[value="${correctAnswer}"]`).parentElement;
-        correctLabel.style.color = 'green';
-        correctLabel.style.fontWeight = 'bold';
-      }
-    } else {
-      // jeśli brak odpowiedzi, pokaż poprawną
-      const correctLabel = q.querySelector(`input[value="${correctAnswer}"]`).parentElement;
-      correctLabel.style.color = 'green';
-      correctLabel.style.fontWeight = 'bold';
+  function markCorrect(qElem, value){
+    const input = qElem.querySelector(`input[name="${qElem.dataset.q}"][value="${value}"]`);
+    if(input && input.parentElement && input.parentElement.querySelector('.choice')){
+      input.parentElement.querySelector('.choice').classList.add('correct');
     }
-  });
+  }
 
-  const result = document.getElementById("result");
-  result.innerHTML = `Twój wynik: ${score} / ${Object.keys(correct).length}`;
-  result.classList.add("result");
-  result.scrollIntoView({ behavior: 'smooth' });
-}
+  function markSelectedIncorrect(selectedInput){
+    if(!selectedInput) return;
+    const parent = selectedInput.parentElement.querySelector('.choice');
+    if(parent) parent.classList.add('incorrect');
+  }
+
+  document.getElementById('checkBtn').addEventListener('click', function(){
+    let score = 0;
+    const total = Object.keys(correct).length;
+
+    // iterate through all expected questions (q1..q20)
+    for(const qName in correct){
+      const qElem = document.querySelector(`.question[data-q="${qName}"]`);
+      if(!qElem){
+        console.warn('Brak elementu dla', qName);
+        continue;
+      }
+      clearStyles(qElem);
+
+      const selected = qElem.querySelector(`input[name="${qName}"]:checked`);
+      const correctAnswer = correct[qName];
+
+      if(selected){
+        if(selected.value === correctAnswer){
+          // mark correct selected
+          const ch = selected.parentElement.querySelector('.choice');
+          if(ch) ch.classList.add('correct');
+          score++;
+        } else {
+          // mark selected as incorrect and show correct
+          markSelectedIncorrect(selected);
+          markCorrect(qElem, correctAnswer);
+        }
+      } else {
+        // no selection: just show correct
+        markCorrect(qElem, correctAnswer);
+      }
+    }
+
+    const res = document.getElementById('result');
+    res.textContent = `Twój wynik: ${score} / ${total} punktów`;
+
+    // scroll to result
+    res.scrollIntoView({behavior:'smooth', block:'center'});
+  });
+})();
 </script>
 
 </body>
