@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fiszki Prawnicze - Kolokwium</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f9; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card-container { background: white; width: 90%; max-width: 500px; padding: 40px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; }
+        h1 { color: #333; font-size: 24px; margin-bottom: 10px; }
+        .counter { color: #888; font-size: 14px; margin-bottom: 30px; }
+        .word-box { min-height: 120px; display: flex; flex-direction: column; justify-content: center; align-items: center; margin-bottom: 30px; }
+        .pl-word { font-size: 26px; font-weight: bold; color: #2c3e50; margin-bottom: 15px; }
+        .en-word { font-size: 24px; color: #27ae60; font-weight: bold; display: none; }
+        .btn { padding: 12px 24px; font-size: 16px; border: none; border-radius: 8px; cursor: pointer; margin: 5px; transition: 0.2s; outline: none; }
+        .btn-reveal { background-color: #3498db; color: white; width: 100%; }
+        .btn-reveal:hover { background-color: #2980b9; }
+        .btn-know { background-color: #2ecc71; color: white; display: none; flex: 1; }
+        .btn-dont-know { background-color: #e74c3c; color: white; display: none; flex: 1; }
+        .btn-restart { background-color: #34495e; color: white; margin-top: 10px; width: 100%; }
+        .hidden { display: none; }
+        .summary { font-size: 18px; line-height: 1.6; margin-bottom: 20px; }
+        .button-group { display: flex; justify-content: center; gap: 10px; width: 100%; }
+    </style>
+</head>
+<body>
+
+<div class="card-container" id="app">
+    <div id="quiz-view">
+        <div class="counter" id="counter">Słowo 1 / X</div>
+        <div class="word-box">
+            <div class="pl-word" id="pl-text">Wczytywanie...</div>
+            <div class="en-word" id="en-text">...</div>
+        </div>
+        <button class="btn btn-reveal" id="btn-reveal" onclick="reveal()">Pokaż odpowiedź (Spacja)</button>
+        <div class="button-group">
+            <button class="btn btn-dont-know" id="btn-dont-know" onclick="rate(false)">Nie umiem (←)</button>
+            <button class="btn btn-know" id="btn-know" onclick="rate(true)">Umiem (→)</button>
+        </div>
+    </div>
+
+    <div id="summary-view" class="hidden">
+        <h1>Koniec nauki!</h1>
+        <p class="summary" id="summary-text"></p>
+        <button class="btn btn-restart" onclick="restartAll()">Powtórz WSZYSTKO od nowa</button>
+        <button class="btn btn-restart" id="btn-retry-errors" onclick="retryErrors()">Powtórz tylko BŁĘDY</button>
+    </div>
+</div>
+
+<script>
+    const fullDatabase = [
+        { pl: "władza (autorytet)", en: "power / authority" },
+        { pl: "pojęcie", en: "idea / concept / notion" },
+        { pl: "sprawować władzę", en: "to exercise power" },
+        { pl: "władze", en: "the authorities" },
+        { pl: "rząd", en: "the government" },
+        { pl: "organy władzy", en: "bodies" },
+        { pl: "instytucje rządowe", en: "institutions" },
+        { pl: "władza ustawodawcza (organ)", en: "legislative power (the legislature)" },
+        { pl: "tworzy prawo", en: "makes law" },
+        { pl: "uchwala prawo", en: "passes the law" },
+        { pl: "władza wykonawcza", en: "executive power" },
+        { pl: "organ wykonawczy", en: "the executive" },
+        { pl: "wykonuje i egzekwuje prawo", en: "executes and enforces law" },
+        { pl: "władza sądownicza", en: "judicial power" },
+        { pl: "sądownictwo", en: "the judiciary" },
+        { pl: "stosuje i interpretuje prawo", en: "applies and interprets/construes law" },
+        { pl: "legalny", en: "legal" },
+        { pl: "zgodny z prawem (prawowity)", en: "lawful" },
+        { pl: "bezprawny", en: "unlawful" },
+        { pl: "nielegalny (wbrew prawu)", en: "illegal" },
+        { pl: "zachowanie zgodne z prawem", en: "lawful behaviour" },
+        { pl: "rozumowanie prawnicze", en: "legal reasoning" },
+        { pl: "praktyka prawnicza", en: "legal practice" },
+        { pl: "język prawniczy", en: "legal language" },
+        { pl: "kroki prawne / powództwo", en: "legal action" },
+        { pl: "podjęcie kroków prawnych", en: "to take legal action" },
+        { pl: "sprzedaż alkoholu bez licencji jest nielegalna", en: "it is illicit/illegal to sell alcohol without a license" },
+        { pl: "stosowanie prawa", en: "application of law" },
+        { pl: "koszty prawne / sądowe", en: "legal costs" },
+        { pl: "medycyna sądowa", en: "legal medicine" },
+        { pl: "usługi prawne", en: "legal services" },
+        { pl: "osobowość prawna", en: "legal personality" },
+        { pl: "prawowity właściciel", en: "lawful owner" },
+        { pl: "konsekwencje / skutki prawne", en: "legal implications" },
+        { pl: "pozycja prawna", en: "legal position" },
+        { pl: "unifikacja prawa", en: "unification of law" },
+        { pl: "ważny w świetle prawa", en: "valid in law" },
+        { pl: "środki prawne", en: "legal means" },
+        { pl: "prawo (system lub ustawa)", en: "law" },
+        { pl: "prawo (uprawnienie)", en: "right" },
+        { pl: "stosować prawo", en: "to apply law" },
+        { pl: "praktykować prawo", en: "to practise law" },
+        { pl: "interpretować prawo", en: "to interpret law" },
+        { pl: "dokonywać wykładni prawa", en: "to construe law" },
+        { pl: "uchwalać prawo", en: "to enact law" },
+        { pl: "zmieniać / nowelizować prawo", en: "to alter law" },
+        { pl: "uchylać / znosić prawo", en: "to repeal law" },
+        { pl: "egzekwować prawo", en: "to enforce law" },
+        { pl: "wykonywać / korzystać z prawa", en: "to exercise a right" },
+        { pl: "zrzec się / odstąpić od prawa", en: "to waive a right" },
+        { pl: "zastrzegać sobie prawo", en: "to reserve a right" },
+        { pl: "przyznać prawo", en: "to grant a right" },
+        { pl: "dochodzić / egzekwować prawo", en: "to enforce a right" },
+        { pl: "prawnik I instancji (porady)", en: "solicitor" },
+        { pl: "adwokat (procesowy)", en: "barrister" },
+        { pl: "izba adwokacka (palestra)", en: "the bar" },
+        { pl: "radca królewski", en: "Counsel (QC)" },
+        { pl: "prawo występowania przed sądem", en: "rights of audience" },
+        { pl: "prawnik wewnętrzny", en: "in-house lawyer" },
+        { pl: "aplikacja adwokacka (UK - barrister)", en: "pupillage" },
+        { pl: "aplikacja (UK - solicitor)", en: "training contract" },
+        { pl: "porada prawna", en: "legal advice" },
+        { pl: "opinia prawna", en: "legal opinion" },
+        { pl: "sporządzać projekty dokumentów", en: "draft documents" },
+        { pl: "notariusz", en: "notary public" },
+        { pl: "prokurator", en: "public prosecutor" },
+        { pl: "rzecznictwo / występowanie w sądzie", en: "advocacy" },
+        { pl: "spory sądowe / procesy", en: "litigation" },
+        { pl: "obsługa prawna obrotu nieruchomościami", en: "conveyancing" },
+        { pl: "testament", en: "will" },
+        { pl: "asystentura (dla barristera)", en: "tenancy" },
+        { pl: "zawodowy", en: "vocational" },
+        { pl: "doradztwo ogólne", en: "advising clients on general legal issues" },
+        { pl: "występowanie w sądach niższych", en: "advocacy in the lower courts" },
+        { pl: "przygotowywanie spraw", en: "preparing cases" },
+        { pl: "stopień naukowy z prawa", en: "law degree" },
+        { pl: "specjalistyczne porady prawne", en: "advising clients on specialist legal issues" },
+        { pl: "występowanie we wszystkich sądach", en: "advocacy in all courts" },
+        { pl: "pisma procesowe", en: "drafting of documents in connection with litigation" },
+        { pl: "tytuły zawodowe prawników", en: "professional titles of lawyers" },
+        { pl: "sprawa prawna", en: "legal affair" },
+        { pl: "kwestia prawna", en: "legal issue" },
+        { pl: "zagadnienie prawne", en: "legal matter" },
+        { pl: "sprawa sądowa (przypadek)", en: "case" },
+        { pl: "postępowanie sądowe", en: "legal proceedings" },
+        { pl: "uzyskać uprawnienia prawnika", en: "to qualify as a lawyer" },
+        { pl: "adwokat / radca prawny (USA)", en: "attorney (at-law)" },
+        { pl: "prowadzić sprawę (argumentować)", en: "to plead (argue) a case" },
+        { pl: "działać w imieniu klienta", en: "to act on behalf of a client" },
+        { pl: "reprezentować klienta", en: "to represent a client" },
+        { pl: "zastępstwo procesowe", en: "representation" },
+        { pl: "zawrzeć ugodę pozasądową", en: "to settle out of court" },
+        { pl: "ugoda", en: "settlement" },
+        { pl: "rozpoznać sprawę (sędzia)", en: "to hear a case" },
+        { pl: "pełnomocnik / prawnik", en: "counsel" },
+        { pl: "zostać przyjętym do palestry", en: "to be called to the bar" },
+        { pl: "lista adwokacka", en: "the roll of advocates" },
+        { pl: "zostać wydalonym z palestry", en: "to be disbarred" },
+        { pl: "być skreślonym z listy", en: "to be struck off the roll" },
+        { pl: "strategia obrony", en: "line in a court" },
+        { pl: "kancelaria (miejsce/siedziba)", en: "chambers" },
+        { pl: "prawo gospodarcze", en: "commercial/business law" },
+        { pl: "aplikant", en: "pupil / trainee" },
+        { pl: "radca prawny", en: "legal advisor" },
+        { pl: "sędzia", en: "judge" },
+        { pl: "rozstrzygnąć spór", en: "to resolve a dispute" },
+        { pl: "niedbały", en: "negligent" },
+        { pl: "błąd w sztuce prawniczej", en: "legal malpractice" },
+        { pl: "pozwać kogoś", en: "to sue sb" },
+        { pl: "wnieść powództwo", en: "to issue a claim" },
+        { pl: "ustawa (akt parlamentu)", en: "act of parliament" },
+        { pl: "poprawka / nowelizacja", en: "amendment" },
+        { pl: "projekt ustawy", en: "bill" },
+        { pl: "obejść (prawo)", en: "bypass" },
+        { pl: "podział władzy", en: "separation of powers" },
+        { pl: "zawetować", en: "veto" }
+    ];
+
+    let currentList = [];
+    let missedList = [];
+    let currentIndex = 0;
+    let errorsCount = 0;
+    let isRevealed = false;
+
+    const plText = document.getElementById('pl-text');
+    const enText = document.getElementById('en-text');
+    const counter = document.getElementById('counter');
+    const btnReveal = document.getElementById('btn-reveal');
+    const btnKnow = document.getElementById('btn-know');
+    const btnDontKnow = document.getElementById('btn-dont-know');
+    const quizView = document.getElementById('quiz-view');
+    const summaryView = document.getElementById('summary-view');
+    const summaryText = document.getElementById('summary-text');
+    const btnRetryErrors = document.getElementById('btn-retry-errors');
+
+    function startQuiz(list) {
+        currentList = shuffle([...list]);
+        missedList = [];
+        currentIndex = 0;
+        errorsCount = 0;
+        quizView.classList.remove('hidden');
+        summaryView.classList.add('hidden');
+        loadCard();
+    }
+
+    function loadCard() {
+        if (currentIndex >= currentList.length) {
+            finishQuiz();
+            return;
+        }
+        isRevealed = false;
+        const item = currentList[currentIndex];
+        plText.innerText = item.pl;
+        enText.innerText = item.en;
+        enText.style.display = 'none';
+        counter.innerText = `Słowo ${currentIndex + 1} z ${currentList.length}`;
+        btnReveal.style.display = 'block';
+        btnKnow.style.display = 'none';
+        btnDontKnow.style.display = 'none';
+    }
+
+    function reveal() {
+        isRevealed = true;
+        enText.style.display = 'block';
+        btnReveal.style.display = 'none';
+        btnKnow.style.display = 'inline-block';
+        btnDontKnow.style.display = 'inline-block';
+    }
+
+    function rate(known) {
+        if (!known) {
+            missedList.push(currentList[currentIndex]);
+            errorsCount++;
+        }
+        currentIndex++;
+        loadCard();
+    }
+
+    function finishQuiz() {
+        quizView.classList.add('hidden');
+        summaryView.classList.remove('hidden');
+        summaryText.innerHTML = `Przerobiłeś ${currentList.length} słów.<br>
+                                 Pamiętałeś: <strong style="color:green">${currentList.length - errorsCount}</strong><br>
+                                 Zapomniałeś: <strong style="color:red">${errorsCount}</strong>`;
+        btnRetryErrors.style.display = missedList.length === 0 ? 'none' : 'inline-block';
+        if (missedList.length === 0) summaryText.innerHTML += "<br><br><strong>Gratulacje! 🎉</strong>";
+    }
+
+    function restartAll() { startQuiz(fullDatabase); }
+    function retryErrors() { startQuiz(missedList); }
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    // Obsługa klawiatury
+    window.addEventListener('keydown', (e) => {
+        if (quizView.classList.contains('hidden')) return;
+        if (e.code === 'Space' || e.code === 'Enter') {
+            e.preventDefault();
+            if (!isRevealed) reveal();
+        } else if (isRevealed && e.code === 'ArrowRight') {
+            rate(true);
+        } else if (isRevealed && e.code === 'ArrowLeft') {
+            rate(false);
+        }
+    });
+
+    restartAll();
+</script>
+
+</body>
+</html>
